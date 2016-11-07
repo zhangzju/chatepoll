@@ -8,8 +8,10 @@ E-poll模型的简单运用，编译时不需要makefile，但是utility.h文件
  epoll的接口非常简单，一共就三个函数：
 1. ```c
    int epoll_create(int size);
+   
    ```
 
+   
    创建一个epoll的句柄，size用来告诉内核这个监听的数目一共有多大。这个参数不同于select()中的第一个参数，给出最大监听的 fd+1的值。需要注意的是，当创建好epoll句柄后，它就是会占用一个fd值，在linux下如果查看**/proc/进程id/fd/**，是能够看到这个 fd的，所以在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。
 
 2. ```c
