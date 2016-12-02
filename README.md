@@ -7,12 +7,11 @@ E-poll模型的简单运用，编译时不需要makefile，但是utility.h文件
 
  epoll的接口非常简单，一共就三个函数：
 1. ```c
-   int epoll_create(int size);
-   
+     int epoll_create(int size); 
    ```
 
-   
-   创建一个epoll的句柄，size用来告诉内核这个监听的数目一共有多大。这个参数不同于select()中的第一个参数，给出最大监听的 fd+1的值。需要注意的是，当创建好epoll句柄后，它就是会占用一个fd值，在linux下如果查看**/proc/进程id/fd/**，是能够看到这个 fd的，所以在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。
+
+     创建一个epoll的句柄，size用来告诉内核这个监听的数目一共有多大。这个参数不同于select()中的第一个参数，给出最大监听的 fd+1的值。需要注意的是，当创建好epoll句柄后，它就是会占用一个fd值，在linux下如果查看**/proc/进程id/fd/**，是能够看到这个 fd的，所以在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。
 
 2. ```c
    int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
@@ -55,14 +54,23 @@ events可以是以下几个宏的集合：
 
 
 1. ```c
-   int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout);
+     int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout);
    ```
 
 等待事件的产生，类似于select()调用。参数events用来从内核得到事件的集合，maxevents告之内核这个events有多大，这 个 maxevents的值不能大于创建epoll_create()时的size，参数timeout是超时时间（毫秒，0会立即返回，-1将不确定，也有 说法说是永久阻塞）。该函数返回需要处理的事件数目，如返回0表示已超时。
 
 
 
+## 使用方法
+
+由于同时使用了Utility的部分函数，因此需要在同一个路径下编译，这个项目的结构比较简单，只需按照如下方式编译即可：
+
+```shell
+	gcc -o client client.c
+```
 
 
 
+编译server时将client替换成server即可。
 
+编译完成后的可执行文件直接运行即可，但是不要忘了添加用户权限。
